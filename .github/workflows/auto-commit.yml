@@ -1,0 +1,32 @@
+name: Auto Commit and Push
+
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  push:
+    branches:
+      - main
+
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Fortune
+        run: sudo apt-get update && sudo apt-get install -y fortune
+
+      - name: Create Random Content
+        run: |
+          fortune > file.txt
+          git add file.txt
+          git commit -m "$(fortune -sn 32)"
+
+      - name: Push Changes
+        run: |
+          git config --global user.name "Suvash-sharma97"
+          git config --global user.email "suvashsharma97@gmail.com"
+          git push
